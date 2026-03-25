@@ -155,8 +155,8 @@ Students ──< Marksheets
 
 ## Author
 
-Built by [Your Name] — [your-email@example.com]  
-GitHub: [@your-username](https://github.com/your-username)
+Built by Rajal — [rajalmistry544@gmail.com]  
+GitHub: [@your-username](https://github.com/Rajal-ui)
 
 ---
 
