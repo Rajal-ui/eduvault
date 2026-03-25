@@ -155,8 +155,8 @@ Students ──< Marksheets
 
 ## Author
 
-Built by Rajal — [rajalmistry544@gmail.com]  
-GitHub: [@your-username](https://github.com/Rajal-ui)
+Built by Rajal — rajalmistry544@gmail.com  
+GitHub: [@Rajal-ui](https://github.com/Rajal-ui)
 
 ---
 
