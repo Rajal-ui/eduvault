@@ -125,3 +125,4 @@ def add_misc(data: MiscRecordCreate, db: Session = Depends(get_db), _=Depends(re
     db.commit()
     db.refresh(record)
     return record
+
