@@ -37,8 +37,9 @@ def create_student(data: StudentCreate, db: Session = Depends(get_db), _=Depends
     existing = db.query(Student).filter(Student.StudentID == data.StudentID).first()
     if existing:
         raise HTTPException(status_code=400, detail="Student ID already exists")
-    student = Student(**data.model_dump())
-    student.Password = hash_password(data.Password)
+    student_data = data.model_dump()
+    student_data["Password"] = hash_password(data.Password)
+    student = Student(**student_data)
     db.add(student)
     db.commit()
     db.refresh(student)
