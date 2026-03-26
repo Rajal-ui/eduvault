@@ -3,12 +3,11 @@ from typing import Optional, List
 from datetime import date, datetime
 from decimal import Decimal
 
-# ── Auth ──────────────────────────────────────────────────────────────────────
 
 class LoginRequest(BaseModel):
     user_id: str
     password: str
-    role: str  # "admin" or "student"
+    role: str  
 
 class TokenResponse(BaseModel):
     access_token: str
@@ -16,7 +15,6 @@ class TokenResponse(BaseModel):
     role: str
     name: str
 
-# ── Student ───────────────────────────────────────────────────────────────────
 
 class StudentCreate(BaseModel):
     StudentID: str
@@ -57,7 +55,6 @@ class StudentOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Marksheet ─────────────────────────────────────────────────────────────────
 
 class MarksheetCreate(BaseModel):
     Subject: str
@@ -73,7 +70,6 @@ class MarksheetOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Fee Receipt ───────────────────────────────────────────────────────────────
 
 class FeeReceiptCreate(BaseModel):
     ReceiptID: str
@@ -95,8 +91,6 @@ class FeeReceiptOut(BaseModel):
     class Config:
         from_attributes = True
 
-# ── Exam Status ───────────────────────────────────────────────────────────────
-
 class ExamStatusCreate(BaseModel):
     StudentID: str
     Semester: str
@@ -114,8 +108,6 @@ class ExamStatusOut(BaseModel):
 
     class Config:
         from_attributes = True
-
-# ── Miscellaneous Record ──────────────────────────────────────────────────────
 
 class MiscRecordCreate(BaseModel):
     StudentID: str
