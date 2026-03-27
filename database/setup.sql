@@ -1,8 +1,3 @@
--- ============================================================
--- EduVault — Database Setup
--- Run this file in MySQL Workbench or via: mysql -u root -p < setup.sql
--- ============================================================
-
 CREATE DATABASE IF NOT EXISTS bvp_student_office;
 USE bvp_student_office;
 
