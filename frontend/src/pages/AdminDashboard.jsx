@@ -227,10 +227,10 @@ function StudentForm({ form, onChange, onSubmit, error, saving, isEdit }) {
     { name: "Name", label: "Full Name" },
     { name: "Department", label: "Department" },
     { name: "Year", label: "Year (1-4)", type: "number" },
-    { name: "Contact", label: "Contact Email" },
+    { name: "Contact", label: "Student Phone", type: "tel" },
     { name: "DateOfBirth", label: "Date of Birth", type: "date" },
     { name: "Address", label: "Address" },
-    { name: "ParentContact", label: "Parent Contact" },
+    { name: "ParentContact", label: "Parent Phone", type: "tel" },
   ];
 
   return (
@@ -238,14 +238,18 @@ function StudentForm({ form, onChange, onSubmit, error, saving, isEdit }) {
       {fields.map((f) => (
         <div key={f.name}>
           <label className="block text-xs font-medium text-gray-600 mb-1">{f.label}</label>
-          <input
-            type={f.type || "text"}
-            name={f.name}
-            value={form[f.name]}
-            onChange={onChange}
-            disabled={f.disabled}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-400"
-          />
+          {f.type === "tel" ? (
+            <PhoneInput name={f.name} value={form[f.name]} disabled={f.disabled} onChange={onChange} />
+          ) : (
+            <input
+              type={f.type || "text"}
+              name={f.name}
+              value={form[f.name] || ""}
+              onChange={onChange}
+              disabled={f.disabled}
+              className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-400"
+            />
+          )}
         </div>
       ))}
 
@@ -280,5 +284,41 @@ function StudentForm({ form, onChange, onSubmit, error, saving, isEdit }) {
         </button>
       </div>
     </form>
+  );
+}
+
+function PhoneInput({ name, value, disabled, onChange }) {
+  // Safe parsing of existing string that might look like "+91 9876543210" or just "9876543210"
+  const valStr = value || "";
+  let code = "+91";
+  let number = valStr;
+  
+  if (valStr.includes(" ")) {
+    const parts = valStr.split(" ");
+    code = parts[0];
+    number = parts.slice(1).join(" ");
+  }
+
+  const handleCode = (e) => onChange({ target: { name, value: `${e.target.value} ${number}` } });
+  const handleNum = (e) => {
+    const cleaned = e.target.value.replace(/\D/g, '').slice(0, 10);
+    onChange({ target: { name, value: `${code} ${cleaned}` } });
+  };
+
+  return (
+    <div className="flex gap-2">
+      <select disabled={disabled} value={code} onChange={handleCode} 
+        className="border border-gray-300 rounded-lg px-2 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 bg-white min-w-[70px]">
+        <option value="+91">+91</option>
+        <option value="+1">+1</option>
+        <option value="+44">+44</option>
+        <option value="+61">+61</option>
+      </select>
+      <input 
+        type="tel" disabled={disabled} value={number} onChange={handleNum} 
+        placeholder="10-digit number" pattern="[0-9]{10}" title="Must be exactly 10 digits" 
+        className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 disabled:bg-gray-50 disabled:text-gray-400" 
+      />
+    </div>
   );
 }
