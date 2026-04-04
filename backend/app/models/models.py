@@ -26,6 +26,7 @@ class Student(Base):
     DateOfBirth    = Column(Date)
     Address        = Column(String(255))
     ParentContact  = Column(String(100))
+    StudentPhone   = Column(String(100))
 
     marksheets    = relationship("Marksheet",          back_populates="student", cascade="all, delete")
     fee_receipts  = relationship("FeeReceipt",         back_populates="student", cascade="all, delete")

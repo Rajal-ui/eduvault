@@ -28,6 +28,7 @@ class StudentCreate(BaseModel):
     DateOfBirth: Optional[date] = None
     Address: Optional[str] = None
     ParentContact: Optional[str] = None
+    StudentPhone: Optional[str] = None
 
 class StudentUpdate(BaseModel):
     Name: Optional[str] = None
@@ -39,6 +40,7 @@ class StudentUpdate(BaseModel):
     DateOfBirth: Optional[date] = None
     Address: Optional[str] = None
     ParentContact: Optional[str] = None
+    StudentPhone: Optional[str] = None
 
 class StudentOut(BaseModel):
     StudentID: str
@@ -51,6 +53,7 @@ class StudentOut(BaseModel):
     DateOfBirth: Optional[date]
     Address: Optional[str]
     ParentContact: Optional[str]
+    StudentPhone: Optional[str]
 
     class Config:
         from_attributes = True

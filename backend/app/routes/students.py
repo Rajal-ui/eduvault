@@ -165,6 +165,7 @@ async def bulk_upload_students(file: UploadFile = File(...), db: Session = Depen
                 "DateOfBirth": parsed_dob,
                 "Address": row.get("Address"),
                 "ParentContact": row.get("ParentContact"),
+                "StudentPhone": row.get("StudentPhone"),
             }
             student = Student(**student_data)
             db.add(student)
@@ -185,13 +186,13 @@ def export_students_csv(db: Session = Depends(get_db), _=Depends(require_admin))
     # Headers
     writer.writerow([
         "StudentID", "Name", "Department", "Year", "Contact", 
-        "AcademicRecord", "FeeStatus", "DateOfBirth", "Address", "ParentContact"
+        "AcademicRecord", "FeeStatus", "DateOfBirth", "Address", "ParentContact", "StudentPhone"
     ])
     
     for s in students:
         writer.writerow([
             s.StudentID, s.Name, s.Department, s.Year, s.Contact,
-            s.AcademicRecord, s.FeeStatus, s.DateOfBirth, s.Address, s.ParentContact
+            s.AcademicRecord, s.FeeStatus, s.DateOfBirth, s.Address, s.ParentContact, s.StudentPhone
         ])
         
     output.seek(0)
