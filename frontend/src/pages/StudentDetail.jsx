@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import api from "../api/axios";
+import { StudentForm } from "./AdminDashboard";
 
 export default function StudentDetail() {
   const { id } = useParams();
@@ -11,6 +12,11 @@ export default function StudentDetail() {
   const [exams, setExams] = useState([]);
   const [misc, setMisc] = useState([]);
   const [modal, setModal] = useState(null);
+  
+  // States for Editing
+  const [form, setForm] = useState(null);
+  const [error, setError] = useState("");
+  const [saving, setSaving] = useState(false);
 
   function fetchAll() {
     Promise.all([
@@ -29,6 +35,32 @@ export default function StudentDetail() {
 
   if (!student) return <div className="p-8 text-gray-500">Loading...</div>;
 
+  function openEdit() {
+    setForm({
+      StudentID: student.StudentID, Name: student.Name, Department: student.Department,
+      Year: student.Year, Contact: student.Contact || "", StudentPhone: student.StudentPhone || "", AcademicRecord: student.AcademicRecord || "",
+      FeeStatus: student.FeeStatus, Password: "", DateOfBirth: student.DateOfBirth || "",
+      Address: student.Address || "", ParentContact: student.ParentContact || "",
+    });
+    setError("");
+    setModal("editProfile");
+  }
+
+  function handleChange(e) { setForm((f) => ({ ...f, [e.target.name]: e.target.value })); }
+
+  async function handleEdit(e) {
+    e.preventDefault(); setSaving(true); setError("");
+    try {
+      const payload = { ...form, Year: parseInt(form.Year) };
+      delete payload.StudentID; delete payload.Password;
+      await api.put(`/students/${student.StudentID}`, payload);
+      setModal(null);
+      fetchAll();
+    } catch (err) {
+      setError(err.response?.data?.detail || "Failed to update student");
+    } finally { setSaving(false); }
+  }
+
   return (
     <div className="min-h-screen bg-gray-50">
       <header className="bg-blue-700 text-white px-6 py-4 flex items-center gap-4">
@@ -40,12 +72,16 @@ export default function StudentDetail() {
       <main className="p-6 max-w-4xl mx-auto space-y-6">
 
         <div className="bg-white rounded-xl shadow p-5">
-          <h2 className="font-semibold text-gray-700 mb-3">Profile</h2>
+          <div className="flex justify-between items-center mb-3">
+            <h2 className="font-semibold text-gray-700">Profile</h2>
+            <button onClick={openEdit} className="text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1 rounded-lg border font-medium">Edit Profile</button>
+          </div>
           <div className="grid grid-cols-2 gap-3 text-sm">
             {[
               ["Department", student.Department],
               ["Year", `Year ${student.Year}`],
               ["Contact", student.Contact],
+              ["Student Phone", student.StudentPhone],
               ["Date of Birth", student.DateOfBirth],
               ["Address", student.Address],
               ["Parent Contact", student.ParentContact],
@@ -143,6 +179,11 @@ export default function StudentDetail() {
       </main>
 
       {/* Modals */}
+      {modal === "editProfile" && (
+        <Modal title="Edit Profile" onClose={() => setModal(null)}>
+          <StudentForm form={form} onChange={handleChange} onSubmit={handleEdit} error={error} saving={saving} isEdit={true} />
+        </Modal>
+      )}
       {modal === "marks"  && <AddMarkModal    studentId={id} onClose={() => { setModal(null); fetchAll(); }} />}
       {modal === "fees"   && <AddFeeModal     studentId={id} onClose={() => { setModal(null); fetchAll(); }} />}
       {modal === "exams"  && <AddExamModal    studentId={id} onClose={() => { setModal(null); fetchAll(); }} />}
